@@ -4,7 +4,8 @@ inherit meson git-r3
 
 EGIT_REPO_URI="https://codeberg.org/dnkl/wbg.git"
 KEYWORDS="~amd64"
-S="${WORKDIR}/${PN}"
+# S="${WORKDIR}/${PN}"
+S="${WORKDIR}/${P}"
 
 DESCRIPTION="Super simple wallpaper application"
 HOMEPAGE="https://codeberg.org/dnkl/wbg"
