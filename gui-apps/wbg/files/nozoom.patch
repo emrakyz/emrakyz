@@ -1,5 +1,5 @@
 diff --git a/main.c b/main.c
-index 7a16690..f05ce1b 100644
+index 7a16690..7e6c188 100644
 --- a/main.c
 +++ b/main.c
 @@ -94,19 +94,17 @@ render(struct output *output)
@@ -36,7 +36,7 @@ index 7a16690..f05ce1b 100644
 -        pix, NULL, buf->pix, 0, 0, 0, 0, 0, 0,
 -        width * scale, height * scale);
 +        pix, NULL, buf->pix, 0, 0, 0, 0, offset_x, offset_y,
-+        dest_width, dest_height)
++        dest_width, dest_height);
  
      pixman_image_unref(pix);
  
