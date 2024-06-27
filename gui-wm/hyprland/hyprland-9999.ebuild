@@ -1,6 +1,6 @@
 EAPI=8
 
-inherit meson toolchain-funcs git-r3
+inherit cmake toolchain-funcs git-r3
 
 DESCRIPTION="A dynamic tiling Wayland compositor that doesn't sacrifice on its looks"
 HOMEPAGE="https://github.com/hyprwm/Hyprland"
