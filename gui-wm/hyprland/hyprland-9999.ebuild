@@ -91,20 +91,40 @@ BDEPEND="
 
 pkg_setup() {
 	[[ ${MERGE_TYPE} == binary ]] && return
+
+	if tc-is-gcc && ver_test $(gcc-version) -lt 13; then
+		eerror "Hyprland requires >=sys-devel/gcc-13 to build"
+		eerror "Please upgrade GCC: emerge -v1 sys-devel/gcc"
+		die "GCC version is too old to compile Hyprland!"
+	elif tc-is-clang && ver_test $(clang-version) -lt 16; then
+		eerror "Hyprland requires >=sys-devel/clang-16 to build"
+		eerror "Please upgrade Clang: emerge -v1 sys-devel/clang"
+		die "Clang version is too old to compile Hyprland!"
+	fi
+}
+
+src_prepare() {
+	# skip version.h
+	sed -i -e "s|scripts/generateVersion.sh|echo|g" meson.build || die
+	default
 }
 
 src_configure() {
-	local mycmakeargs=(
-		-DLEGACY_RENDERER=$(usex legacy-renderer '1' '0')
-		-DNO_SYSTEMD=$(usex systemd '0' '1')
-		-DNO_XWAYLAND=$(usex X '0' '1')
+	local emesonargs=(
+		$(meson_feature legacy-renderer legacy_renderer)
+		$(meson_feature systemd)
+		$(meson_feature X xwayland)
+		$(meson_feature X wlroots:xwayland)
 		-Dwlroots:backends=drm,libinput$(usev X ',x11')
 		-Dwlroots:xcb-errors=disabled
 	)
 
-	cmake_src_configure
+	meson_src_configure
 }
 
 src_install() {
-	cmake_src_install
+	# First install everything except wlroots to avoid conflicts.
+	meson_src_install --skip-subprojects wlroots
+	# Then install development files (mainly wlroots) for bug #916760.
+	meson_src_install --tags devel
 }
