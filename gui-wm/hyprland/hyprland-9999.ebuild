@@ -78,7 +78,6 @@ DEPEND="
 	>=dev-libs/hyprland-protocols-0.2
 	>=dev-libs/hyprlang-0.3.2
 	>=dev-libs/wayland-protocols-1.34
-	dev-util/hyprwayland-scanner
 	gui-libs/hyprcursor
 	gui-libs/xdg-desktop-portal-hyprland
 	dev-libs/hyprutils
@@ -91,7 +90,6 @@ BDEPEND="
 	dev-util/hyprwayland-scanner
 	virtual/pkgconfig
 "
-
 pkg_setup() {
 	[[ ${MERGE_TYPE} == binary ]] && return
 
@@ -104,6 +102,12 @@ pkg_setup() {
 		eerror "Please upgrade Clang: emerge -v1 sys-devel/clang"
 		die "Clang version is too old to compile Hyprland!"
 	fi
+}
+
+src_prepare() {
+	# skip version.h
+	sed -i -e "s|scripts/generateVersion.sh|echo|g" meson.build || die
+	default
 }
 
 src_configure() {
@@ -124,7 +128,4 @@ src_install() {
 	meson_src_install --skip-subprojects wlroots
 	# Then install development files (mainly wlroots) for bug #916760.
 	meson_src_install --tags devel
-
-	# devel tag includes wlroots .pc and .a files still
-	rm -rf "${ED:?}"/usr/"$(get_libdir)"/ || die
 }
