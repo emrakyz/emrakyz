@@ -80,6 +80,7 @@ DEPEND="
 	dev-libs/hyprland-protocols
 	dev-libs/hyprlang
 	dev-libs/wayland-protocols
+	dev-libs/aquamarine
 "
 BDEPEND="
 	${WLROOTS_BDEPEND}
