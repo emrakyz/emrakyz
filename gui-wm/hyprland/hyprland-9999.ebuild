@@ -90,12 +90,12 @@ BDEPEND="
 	virtual/pkgconfig
 "
 
-src_prepare() {
-	# Call the parent prepare function
-	cmake_src_prepare
+PATCHES=(
+	"${FILESDIR}/nosymlink.patch"
+)
 
-	# Comment out the line that creates the symlink
-	sed -i 's|install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink /usr/bin/Hyprland /usr/bin/hyprland)")|# Symlink creation disabled|g' CMakeLists.txt
+src_prepare() {
+	cmake_src_prepare
 }
 
 src_configure() {
