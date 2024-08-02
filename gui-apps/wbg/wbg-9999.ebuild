@@ -13,7 +13,7 @@ HOMEPAGE="https://codeberg.org/dnkl/wbg"
 # ZLIB for nanosvg
 LICENSE="MIT ZLIB"
 SLOT="0"
-IUSE="jpeg jpegxl png webp"
+IUSE="jpeg jpegxl png webp svg system-nanosvg"
 
 RDEPEND="
 	dev-libs/wayland
@@ -22,6 +22,7 @@ RDEPEND="
 	jpegxl? ( media-libs/libjxl:= )
 	png? ( media-libs/libpng:= )
 	webp? ( media-libs/libwebp:= )
+	system-nanosvg? ( media-libs/nanosvg:= )
 "
 DEPEND="
 	${RDEPEND}
@@ -33,22 +34,14 @@ BDEPEND="
 	virtual/pkgconfig
 "
 
-PATCHES=(
-	"${FILESDIR}/nozoom.patch"
-)
-
-src_prepare() {
-	default
-	eapply_user
-}
-
 src_configure() {
 	local emesonargs=(
 		$(meson_feature jpeg)
 		$(meson_feature jpegxl jxl)
 		$(meson_feature png)
 		$(meson_feature webp)
-		-Dsvg=true
+		$(meson_use svg)
+		$(meson_feature system-nanosvg)
 	)
 
 	meson_src_configure

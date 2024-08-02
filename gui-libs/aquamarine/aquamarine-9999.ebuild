@@ -33,6 +33,7 @@ RDEPEND="
 	x11-libs/pixman
 	virtual/libudev
 	sys-apps/hwdata
+	gui-libs/egl-gbm
 	>=sys-auth/seatd-0.8.0
 "
 DEPEND="
