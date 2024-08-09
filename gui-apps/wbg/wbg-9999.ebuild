@@ -3,9 +3,6 @@ EAPI=8
 inherit meson git-r3
 
 EGIT_REPO_URI="https://codeberg.org/dnkl/wbg.git"
-KEYWORDS="~amd64"
-# S="${WORKDIR}/${PN}"
-S="${WORKDIR}/${P}"
 
 DESCRIPTION="Super simple wallpaper application"
 HOMEPAGE="https://codeberg.org/dnkl/wbg"
@@ -13,7 +10,12 @@ HOMEPAGE="https://codeberg.org/dnkl/wbg"
 # ZLIB for nanosvg
 LICENSE="MIT ZLIB"
 SLOT="0"
-IUSE="jpeg jpegxl png webp svg system-nanosvg"
+IUSE="jpeg jpegxl png webp +svg system-nanosvg"
+
+REQUIRED_USE="
+	|| ( jpeg jpegxl png webp svg )
+	system-nanosvg? ( svg )
+"
 
 RDEPEND="
 	dev-libs/wayland
@@ -40,8 +42,8 @@ src_configure() {
 		$(meson_feature jpegxl jxl)
 		$(meson_feature png)
 		$(meson_feature webp)
-		$(meson_use svg)
 		$(meson_feature system-nanosvg)
+		$(meson_use svg)
 	)
 
 	meson_src_configure
