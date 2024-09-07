@@ -58,7 +58,7 @@ src_install() {
 		dobin "${S}/target/debug/${PN}"
 	else
 		elog "Release build, contents of target/release:"
-		ls -l "${S}/target/release"
+		find "${S}" -type f -executable -print
 		dobin "${S}/target/release/${PN}"
 	fi
 
