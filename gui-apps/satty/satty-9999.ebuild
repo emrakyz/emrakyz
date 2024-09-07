@@ -52,14 +52,14 @@ src_unpack() {
 src_install() {
 	dodoc README.md
 
-	if use debug; then
-		elog "Debug build, contents of target/debug:"
-		ls -l "${S}/target/debug"
-		dobin "${S}/target/debug/${PN}"
+	local binary_path="${S}/target/x86_64-unknown-linux-gnu/release/${PN}"
+	if [[ -x "${binary_path}" ]]; then
+		dobin "${binary_path}"
 	else
-		elog "Release build, contents of target/release:"
-		find "${S}" -type f -executable -print
-		dobin "${S}/target/release/${PN}"
+		elog "Binary not found at expected location: ${binary_path}"
+		elog "Searching for satty binary:"
+		find "${S}/target" -name satty -type f -executable -print
+		die "Could not find satty binary"
 	fi
 
 	doicon "${S}/assets/satty.svg"
