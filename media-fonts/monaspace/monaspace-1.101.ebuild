@@ -10,5 +10,5 @@ LICENSE="OFL-1.1"
 SLOT="0"
 KEYWORDS="~amd64"
 
-S="${WORKDIR}/monaspace-v${PV}/fonts/variable"
-FONT_SUFFIX="ttf"
+S="${WORKDIR}/monaspace-v${PV}/fonts/otf"
+FONT_SUFFIX="otf"
