@@ -8,7 +8,7 @@ SRC_URI="https://github.com/githubnext/monaspace/releases/download/v${PV}/monasp
 
 LICENSE="OFL-1.1"
 SLOT="0"
-KEYWORDS="amd64"
+KEYWORDS="~amd64"
 
-S="${WORKDIR}/fonts/variable"
+S="${WORKDIR}/monaspace-v${PV}/fonts/variable"
 FONT_SUFFIX="ttf"
