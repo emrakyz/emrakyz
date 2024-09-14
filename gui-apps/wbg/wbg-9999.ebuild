@@ -10,12 +10,11 @@ HOMEPAGE="https://codeberg.org/dnkl/wbg"
 # ZLIB for nanosvg
 LICENSE="MIT ZLIB"
 SLOT="0"
-IUSE="jpeg jpegxl jxl_threads png webp +svg system-nanosvg"
+IUSE="jpeg jpegxl png webp +svg system-nanosvg"
 
 REQUIRED_USE="
 	|| ( jpeg jpegxl png webp svg )
 	system-nanosvg? ( svg )
-	jxl_threads? ( jpegxl )
 "
 
 RDEPEND="
@@ -41,7 +40,6 @@ src_configure() {
 	local emesonargs=(
 		$(meson_feature jpeg)
 		$(meson_feature jpegxl jxl)
-		$(meson_feature jxl_threads)
 		$(meson_feature png)
 		$(meson_feature webp)
 		$(meson_feature system-nanosvg)
