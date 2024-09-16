@@ -189,10 +189,17 @@ src_unpack() {
 	cargo_live_src_unpack
 }
 
+src_prepare() {
+	default
+	cargo fetch --locked --target "$(rust_abi)"
+}
+
 src_compile() {
-	cargo_src_compile
+	cargo build --release --frozen --all-features
 }
 
 src_install() {
-	cargo_src_install
+	cargo install --frozen --offline --no-track --path . \
+		--root "${ED}/usr" || die
+	rm -f "${ED}/usr/.crates2.json" "${ED}/usr/.crates.toml"
 }
