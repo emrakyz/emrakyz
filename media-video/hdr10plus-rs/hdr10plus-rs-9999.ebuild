@@ -182,28 +182,34 @@ LICENSE+=" Apache-2.0 BSD ISC MIT MPL-2.0 Unicode-DFS-2016"
 SLOT="0"
 KEYWORDS="~amd64"
 
-S="${WORKDIR}/hdr10plus_tool/hdr10plus"
+src_unpack() {
+	git-r3_src_unpack
+	cargo_live_src_unpack
+}
 
 src_prepare() {
 	default
-	cargo fetch \
-		--manifest-path hdr10plus/Cargo.toml
+	export S="$(find "${WORKDIR}" -type d -name "hdr10plus" -print -quit)"
+	cd "${S}" || die "Failed to change to hdr10plus directory"
+	cargo fetch --manifest-path Cargo.toml
 }
 
 src_compile() {
+	cd "${S}" || die "Failed to change to hdr10plus directory"
 	cargo cbuild \
 		--release \
 		--frozen \
 		--prefix=/usr \
-		--manifest-path hdr10plus/Cargo.toml || die
+		--manifest-path Cargo.toml || die
 }
 
 src_install() {
-	cd hdr10plus || die
-
+	cd "${S}" || die "Failed to change to hdr10plus directory"
 	cargo cinstall \
 		--release \
 		--frozen \
 		--prefix /usr \
 		--destdir "${ED}" || die
+
+	dodoc LICENSE
 }
