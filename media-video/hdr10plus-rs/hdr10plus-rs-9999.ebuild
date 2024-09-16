@@ -184,22 +184,26 @@ KEYWORDS="~amd64"
 
 S="${WORKDIR}/${P}/hdr10plus"
 
-src_unpack() {
-	git-r3_src_unpack
-	cargo_live_src_unpack
-}
-
 src_prepare() {
 	default
-	cargo fetch --locked --target "$(rust_abi)"
+	cargo fetch \
+		--manifest-path hdr10plus/Cargo.toml
 }
 
 src_compile() {
-	cargo build --release --frozen --all-features
+	cargo cbuild \
+		--release \
+		--frozen \
+		--prefix=/usr \
+		--manifest-path hdr10plus/Cargo.toml || die
 }
 
 src_install() {
-	cargo install --frozen --offline --no-track --path . \
-		--root "${ED}/usr" || die
-	rm -f "${ED}/usr/.crates2.json" "${ED}/usr/.crates.toml"
+	cd hdr10plus || die
+
+	cargo cinstall \
+		--release \
+		--frozen \
+		--prefix /usr \
+		--destdir "${ED}" || die
 }
