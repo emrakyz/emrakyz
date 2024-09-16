@@ -182,7 +182,7 @@ LICENSE+=" Apache-2.0 BSD ISC MIT MPL-2.0 Unicode-DFS-2016"
 SLOT="0"
 KEYWORDS="~amd64"
 
-S="${WORKDIR}/${P}/hdr10plus"
+S="${WORKDIR}/hdr10plus_tool/hdr10plus"
 
 src_prepare() {
 	default
