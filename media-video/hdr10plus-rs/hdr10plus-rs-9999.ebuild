@@ -188,3 +188,11 @@ src_unpack() {
 	git-r3_src_unpack
 	cargo_live_src_unpack
 }
+
+src_compile() {
+	cargo_src_compile
+}
+
+src_install() {
+	cargo_src_install
+}
