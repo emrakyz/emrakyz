@@ -18,22 +18,23 @@ BDEPEND="
     dev-util/cargo-c
 "
 
+S="${WORKDIR}/${P}/hdr10plus"
+
 src_unpack() {
 	git-r3_src_unpack
 	cargo_live_src_unpack
 }
 
 src_configure() {
-	cd "${S}/hdr10plus" || die
 	cargo_src_configure
 }
 
 src_compile() {
-	cd "${S}/hdr10plus" || die
-	cargo cinstall --release --features capi --prefix="${EPREFIX}/usr" --library-type=staticlib --library-type=cdylib || die
+	cargo_src_compile
+	cargo cinstall --release --features capi --prefix="${EPREFIX}/usr" --libdir="$(get_libdir)" || die
 }
 
 src_install() {
-	cd "${S}/hdr10plus" || die
-	cargo cinstall --release --features capi --prefix="${EPREFIX}/usr" --destdir="${D}" --library-type=staticlib --library-type=cdylib || die
+	cargo cinstall --release --features capi --prefix="${EPREFIX}/usr" --libdir="$(get_libdir)" --destdir="${D}" || die
+	einstalldocs
 }
