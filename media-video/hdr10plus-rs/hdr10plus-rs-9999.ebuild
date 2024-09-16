@@ -1,3 +1,6 @@
+# Copyright 2023 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
 EAPI=8
 
 inherit cargo git-r3
@@ -15,7 +18,6 @@ DEPEND=""
 RDEPEND="${DEPEND}"
 BDEPEND="
     virtual/rust
-    dev-util/cargo-c
 "
 
 S="${WORKDIR}/${P}/hdr10plus"
@@ -26,15 +28,17 @@ src_unpack() {
 }
 
 src_configure() {
-	cargo_src_configure
+	cargo_src_configure --no-default-features --features capi
 }
 
 src_compile() {
-	cargo_src_compile
-	cargo cinstall --release --features capi --prefix="${EPREFIX}/usr" --libdir="$(get_libdir)" || die
+	cargo_src_compile --no-default-features --features capi
 }
 
 src_install() {
-	cargo cinstall --release --features capi --prefix="${EPREFIX}/usr" --libdir="$(get_libdir)" --destdir="${D}" || die
-	einstalldocs
+	cargo_src_install --no-default-features --features capi
+
+	# Install the pkg-config file manually
+	insinto /usr/$(get_libdir)/pkgconfig
+	doins "${S}/target/release/hdr10plus-rs.pc"
 }
