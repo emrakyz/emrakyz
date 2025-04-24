@@ -46,11 +46,7 @@ multilib_src_configure() {
 	local myconfargs=(
 		--prefix="${EPREFIX}"/usr
 		--libdir="${EPREFIX}"/usr/$(get_libdir)
-		--enable-pic
-		--enable-vp8
 		--enable-vp9
-		--enable-shared
-		--disable-optimizations
 		$(use_enable postproc)
 		$(use_enable static-libs static)
 		$(use_enable test unit-tests)
@@ -73,6 +69,13 @@ multilib_src_configure() {
 	myconfargs+=(--disable-examples --disable-install-docs --disable-docs)
 
 	edo "${S}"/configure "${myconfargs[@]}"
+}
+
+multilib_src_compile() {
+	# Build verbose by default and do not build examples that will not be installed
+	# Disable stripping of debug info, bug #752057
+	# (only works as long as upstream does not use non-gnu strip)
+	emake verbose=yes GEN_EXAMPLES= HAVE_GNU_STRIP=no
 }
 
 multilib_src_install() {
