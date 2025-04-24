@@ -46,6 +46,8 @@ multilib_src_configure() {
 	local myconfargs=(
 		--prefix="${EPREFIX}"/usr
 		--libdir="${EPREFIX}"/usr/$(get_libdir)
+		--enable-pic
+		--enable-vp8
 		--enable-vp9
 		$(use_enable postproc)
 		$(use_enable static-libs static)
