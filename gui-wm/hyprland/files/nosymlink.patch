@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f26a5c3c..0f211056 100644
+index de80e98f..0045631e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -326,13 +326,6 @@ add_subdirectory(hyprpm)
+@@ -403,12 +403,6 @@ endif()
  # binary and symlink
  install(TARGETS Hyprland)
  
@@ -12,7 +12,6 @@ index f26a5c3c..0f211056 100644
 -        ${CMAKE_INSTALL_FULL_BINDIR}/Hyprland \
 -        \"\$ENV{DESTDIR}${CMAKE_INSTALL_FULL_BINDIR}/hyprland\" \
 -        )")
--
  # session file
  install(FILES ${CMAKE_SOURCE_DIR}/example/hyprland.desktop
          DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/wayland-sessions)
