@@ -62,7 +62,6 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libinput
 	dev-libs/wayland
-	gui-libs/hyprcursor
 	=gui-libs/hyprutils-${PV}
 	media-libs/libglvnd
 	x11-libs/cairo
