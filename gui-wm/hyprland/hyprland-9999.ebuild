@@ -99,7 +99,7 @@ src_prepare() {
 
 src_configure() {
 	local mycmakeargs=(
-		-DCMAKE_INSTALL_LIBDIR="$(get_libdir)"
+		-DCMAKE_INSTALL_LIBDIR=lib64
 		-DLEGACY_RENDERER=$(usex legacy-renderer '1' '0')
 		-DNO_SYSTEMD=$(usex systemd '0' '1')
 		-DNO_XWAYLAND=$(usex X '0' '1')
