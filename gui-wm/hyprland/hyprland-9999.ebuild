@@ -99,7 +99,7 @@ src_prepare() {
 
 src_configure() {
 	local mycmakeargs=(
-		-DCMAKE_INSTALL_LIBDIR=lib64
+		-DBUILD_TESTING=OFF
 		-DLEGACY_RENDERER=$(usex legacy-renderer '1' '0')
 		-DNO_SYSTEMD=$(usex systemd '0' '1')
 		-DNO_XWAYLAND=$(usex X '0' '1')
@@ -112,4 +112,6 @@ src_configure() {
 
 src_install() {
 	cmake_src_install
+
+	rm -f "${ED}/usr/lib/hyprtestplugin.so" || die
 }
