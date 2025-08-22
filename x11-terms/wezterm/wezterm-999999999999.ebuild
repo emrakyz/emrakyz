@@ -784,6 +784,10 @@ src_unpack() {
 	fi
 }
 
+PATCHES=(
+	"${FILESDIR}/fix_sync.patch"
+)
+
 src_prepare() {
 	if [[ -n ${PV%%*9999} ]]; then
 		mv -t deps/harfbuzz/${MY_HB%-*} ../${MY_HB}/*
