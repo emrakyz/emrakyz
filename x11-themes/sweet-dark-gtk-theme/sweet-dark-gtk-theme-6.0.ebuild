@@ -8,8 +8,8 @@ inherit xdg
 DESCRIPTION="Sweet (dark) gtk theme"
 HOMEPAGE="https://github.com/EliverLara/Sweet"
 SRC_URI="
-	https://github.com/EliverLara/Sweet/releases/download/v${PV}/Sweet-Ambar-Blue.tar.xz -> ${P}.tar.xz
-	https://github.com/EliverLara/Sweet/releases/download/v${PV}/Sweet-Dark-v40.tar.xz -> ${P}-v40.tar.xz
+	https://github.com/EliverLara/Sweet/releases/download/v${PV}/Sweet-Ambar-Blue.tar.xz
+	https://github.com/EliverLara/Sweet/releases/download/v${PV}/Sweet-Dark-v40.tar.xz
 "
 S="${WORKDIR}"
 
@@ -21,7 +21,7 @@ BDEPEND="app-arch/xz-utils"
 
 src_install() {
 	insinto /usr/share/themes/Sweet-Dark
-	doins -r Sweet-Dark/{assets,cinnamon,gnome-shell,gtk-{2,3}.0,metacity-1,xfwm4,index.theme}
-	insinto /usr/share/themes/Sweet-Dark-4
-	doins -r Sweet-Dark-v40/{assets,cinnamon,gnome-shell,gtk-{2,3}.0,metacity-1,xfwm4,index.theme}
+	doins -r Sweet-Dark/{assets,cinnamon,gnome-shell,gtk-{2,3,4}.0,metacity-1,xfwm4,index.theme}
+	insinto /usr/share/themes/Sweet-Dark-v40
+	doins -r Sweet-Dark-v40/{assets,cinnamon,gnome-shell,gtk-{2,3,4}.0,metacity-1,xfwm4,index.theme}
 }
