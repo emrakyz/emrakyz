@@ -8,7 +8,7 @@ inherit xdg
 DESCRIPTION="Sweet (dark) gtk theme"
 HOMEPAGE="https://github.com/EliverLara/Sweet"
 SRC_URI="
-	https://github.com/EliverLara/Sweet/releases/download/v${PV}/Sweet-Ambar-Blue.tar.xz
+	https://github.com/EliverLara/Sweet/releases/download/v${PV}/Sweet-Dark.tar.xz
 	https://github.com/EliverLara/Sweet/releases/download/v${PV}/Sweet-Dark-v40.tar.xz
 "
 S="${WORKDIR}"
