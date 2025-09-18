@@ -8,8 +8,8 @@ inherit xdg
 DESCRIPTION="Sweet (dark) gtk theme"
 HOMEPAGE="https://github.com/EliverLara/Sweet"
 SRC_URI="
-	https://github.com/EliverLara/Sweet/releases/download/v${PV}/Sweet-Dark.zip -> ${P}.zip
-	https://github.com/EliverLara/Sweet/releases/download/v${PV}/Sweet-Dark-v40.zip -> ${P}-v40.zip
+	https://github.com/EliverLara/Sweet/releases/download/v${PV}/Sweet-Ambar-Blue.tar.xz -> ${P}.tar.xz
+	https://github.com/EliverLara/Sweet/releases/download/v${PV}/Sweet-Dark-v40.tar.xz -> ${P}-v40.tar.xz
 "
 S="${WORKDIR}"
 
@@ -17,7 +17,7 @@ KEYWORDS="~amd64"
 LICENSE="GPL-3"
 SLOT="0"
 
-BDEPEND="app-arch/unzip"
+BDEPEND="app-arch/xz-utils"
 
 src_install() {
 	insinto /usr/share/themes/Sweet-Dark
