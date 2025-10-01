@@ -728,8 +728,8 @@ src_install() {
 	docompress /usr/lib/${PN}/${SLOT}/share/man/
 
 	# bug #689562, #689160
-	rm -v "${ED}/usr/lib/${PN}/${SLOT}/etc/bash_completion.d/cargo" || die
-	rmdir -v "${ED}/usr/lib/${PN}/${SLOT}"/etc{/bash_completion.d,} || die
+	rm -fv "${ED}/usr/lib/${PN}/${SLOT}/etc/bash_completion.d/cargo" 2>/dev/null || true
+	rmdir -fv "${ED}/usr/lib/${PN}/${SLOT}"/etc{/bash_completion.d,} 2>/dev/null || true
 
 	local symlinks=(
 		cargo
