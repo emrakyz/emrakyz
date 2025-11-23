@@ -17,7 +17,7 @@ LICENSE="BSD"
 SLOT="0"
 
 RDEPEND="
-	dev-libs/hyprutils
+	gui-libs/hyprutils
 	media-libs/libjpeg-turbo
 	media-libs/libjxl
 	media-libs/libpng
