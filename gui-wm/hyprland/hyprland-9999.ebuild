@@ -1,117 +1,108 @@
+# Copyright 2024 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
 EAPI=8
 
-inherit cmake toolchain-funcs git-r3
+inherit cmake toolchain-funcs
 
 DESCRIPTION="A dynamic tiling Wayland compositor that doesn't sacrifice on its looks"
 HOMEPAGE="https://github.com/hyprwm/Hyprland"
-EGIT_REPO_URI="https://github.com/hyprwm/${PN^}.git"
+
+if [[ "${PV}" = *9999 ]]; then
+	inherit git-r3
+	EGIT_REPO_URI="https://github.com/hyprwm/${PN^}.git"
+else
+	SRC_URI="https://github.com/hyprwm/${PN^}/releases/download/v${PV}/source-v${PV}.tar.gz -> ${P}.gh.tar.gz"
+	S="${WORKDIR}/${PN}-source"
+
+	KEYWORDS="~amd64"
+fi
 
 LICENSE="BSD"
 SLOT="0"
-IUSE="X legacy-renderer systemd"
+IUSE="+hyprpm +qtutils systemd uwsm X"
 
 # hyprpm (hyprland plugin manager) requires the dependencies at runtime
 # so that it can clone, compile and install plugins.
 HYPRPM_RDEPEND="
 	app-alternatives/ninja
-	dev-build/cmake
-	dev-build/meson
-	dev-libs/libliftoff
+	>=dev-build/cmake-3.30
 	dev-vcs/git
 	virtual/pkgconfig
 "
-# bundled wlroots has the following dependency string according to included headers.
-# wlroots[drm,gles2-renderer,libinput,x11-backend?,X?]
-# enable x11-backend with X and vice versa
-WLROOTS_DEPEND="
-	dev-libs/wayland
-	media-libs/libglvnd
-	|| (
-		>=media-libs/mesa-24.1.0_rc1[opengl]
-		<media-libs/mesa-24.1.0_rc1[egl(+),gles2]
-	)
-	x11-libs/libdrm
-	x11-libs/libxkbcommon
-	x11-libs/pixman
-	media-libs/libdisplay-info
-	sys-apps/hwdata
-	dev-libs/libinput
-	sys-auth/seatd
-	virtual/libudev
-	X? (
-		x11-libs/libxcb
-		x11-libs/xcb-util
-		x11-libs/xcb-util-errors
-		x11-libs/xcb-util-renderutil
-		x11-libs/xcb-util-wm
-		x11-base/xwayland
-	)
-"
-WLROOTS_RDEPEND="
-	${WLROOTS_DEPEND}
-"
-WLROOTS_BDEPEND="
-	dev-libs/wayland-protocols
-	dev-util/hyprwayland-scanner
-	virtual/pkgconfig
-"
 RDEPEND="
-	${HYPRPM_RDEPEND}
-	${WLROOTS_RDEPEND}
+	hyprpm? ( ${HYPRPM_RDEPEND} )
 	dev-cpp/tomlplusplus
 	dev-libs/glib:2
-	dev-libs/libinput
-	dev-libs/wayland
-	=gui-libs/hyprutils-${PV}
+	dev-libs/hyprgraphics:=
+	dev-libs/hyprlang
+	dev-cpp/muParser
+	dev-libs/libinput:=
+	dev-libs/re2:=
+	>=dev-libs/udis86-1.7.2
+	>=dev-libs/wayland-1.22.90
+	>=gui-libs/aquamarine-0.9.0:=
+	>=gui-libs/hyprcursor-0.1.9
+	>=gui-libs/hyprutils-0.8.2:=
 	media-libs/libglvnd
+	media-libs/mesa
+	sys-apps/util-linux
 	x11-libs/cairo
 	x11-libs/libdrm
 	x11-libs/libxkbcommon
+	x11-libs/libXcursor
 	x11-libs/pango
 	x11-libs/pixman
+	qtutils? ( gui-libs/hyprland-qtutils )
 	X? (
+		x11-base/xwayland
 		x11-libs/libxcb:0=
+		x11-libs/xcb-util-errors
+		x11-libs/xcb-util-wm
 	)
 "
 DEPEND="
 	${RDEPEND}
-	${WLROOTS_DEPEND}
-	dev-libs/hyprland-protocols
-	dev-libs/hyprlang
-	dev-libs/wayland-protocols
-	gui-libs/aquamarine
+	dev-cpp/glaze
+	>=dev-libs/hyprland-protocols-0.6.4
+	>=dev-libs/wayland-protocols-1.45
 "
 BDEPEND="
-	${WLROOTS_BDEPEND}
+	|| ( >=sys-devel/gcc-15:* >=llvm-core/clang-19:* )
 	app-misc/jq
 	dev-build/cmake
-	dev-util/hyprwayland-scanner
+	>=dev-util/hyprwayland-scanner-0.4.5
 	virtual/pkgconfig
 "
 
-PATCHES=(
-	"${FILESDIR}/nosymlink.patch"
-)
+pkg_setup() {
+	[[ ${MERGE_TYPE} == binary ]] && return
 
-src_prepare() {
-	cmake_src_prepare
+	if tc-is-gcc && ver_test $(gcc-version) -lt 15; then
+		eerror "Hyprland requires >=sys-devel/gcc-15 to build"
+		eerror "Please upgrade GCC: emerge -v1 sys-devel/gcc"
+		die "GCC version is too old to compile Hyprland!"
+	elif tc-is-clang && ver_test $(clang-version) -lt 19; then
+		eerror "Hyprland requires >=llvm-core/clang-19 to build"
+		eerror "Please upgrade Clang: emerge -v1 llvm-core/clang"
+		die "Clang version is too old to compile Hyprland!"
+	fi
 }
 
 src_configure() {
 	local mycmakeargs=(
-		-DBUILD_TESTING=OFF
-		-DLEGACY_RENDERER=$(usex legacy-renderer '1' '0')
-		-DNO_SYSTEMD=$(usex systemd '0' '1')
-		-DNO_XWAYLAND=$(usex X '0' '1')
-		-Dwlroots:backends=drm,libinput$(usev X ',x11')
-		-Dwlroots:xcb-errors=disabled
+		-DBUILD_TESTING=false
+		-DNO_HYPRPM=$(usex !hyprpm)
+		-DNO_SYSTEMD=$(usex !systemd)
+		-DNO_XWAYLAND=$(usex !X)
 	)
+
+	# NO_UWSM only applies when systemd is enabled
+	use systemd && mycmakeargs+=( -DNO_UWSM=$(usex !uwsm) )
 
 	cmake_src_configure
 }
 
-src_install() {
-	cmake_src_install
-
-	rm -f "${ED}/usr/lib/hyprtestplugin.so" || die
+src_compile() {
+	cmake_build release
 }
