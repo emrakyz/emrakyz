@@ -89,6 +89,7 @@ pkg_setup() {
 src_configure() {
 	local mycmakeargs=(
 		-DBUILD_TESTING=false
+		-DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
 		-DNO_HYPRPM=$(usex !hyprpm)
 		-DNO_SYSTEMD=$(usex !systemd)
 		-DNO_XWAYLAND=$(usex !X)
