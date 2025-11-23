@@ -87,19 +87,25 @@ pkg_setup() {
 }
 
 src_configure() {
-	local mycmakeargs=(
-		-DBUILD_TESTING=false
-		-DNO_HYPRPM=$(usex !hyprpm)
-		-DNO_SYSTEMD=$(usex !systemd)
-		-DNO_XWAYLAND=$(usex !X)
-	)
-
-	# NO_UWSM only applies when systemd is enabled
-	use systemd && mycmakeargs+=( -DNO_UWSM=$(usex !uwsm) )
-
-	cmake_src_configure
+	:
 }
 
 src_compile() {
-	emake -C "${S}" release
+	local myconf=(
+		-DCMAKE_BUILD_TYPE:STRING=Release
+		-DCMAKE_INSTALL_PREFIX:STRING="${EPREFIX}/usr"
+		-DBUILD_TESTING=false
+		-DNO_HYPRPM=$(usex hyprpm false true)
+		-DNO_SYSTEMD=$(usex systemd false true)
+		-DNO_XWAYLAND=$(usex X false true)
+	)
+
+	use systemd && myconf+=( -DNO_UWSM=$(usex uwsm false true) )
+
+	cmake "${myconf[@]}" -S . -B ./build || die
+	cmake --build ./build --config Release --target all -j$(makeopts_jobs) || die
+}
+
+src_install() {
+	DESTDIR="${D}" cmake --install ./build || die
 }
