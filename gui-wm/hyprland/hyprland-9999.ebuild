@@ -89,7 +89,6 @@ pkg_setup() {
 src_configure() {
 	local mycmakeargs=(
 		-DBUILD_TESTING=false
-		-DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
 		-DNO_HYPRPM=$(usex !hyprpm)
 		-DNO_SYSTEMD=$(usex !systemd)
 		-DNO_XWAYLAND=$(usex !X)
@@ -99,4 +98,8 @@ src_configure() {
 	use systemd && mycmakeargs+=( -DNO_UWSM=$(usex !uwsm) )
 
 	cmake_src_configure
+}
+
+src_compile() {
+	emake -C "${S}" release
 }
