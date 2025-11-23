@@ -1,6 +1,3 @@
-# Copyright 2024 Gentoo Authors
-# Distributed under the terms of the GNU General Public License v2
-
 EAPI=8
 
 inherit cmake toolchain-funcs
@@ -101,8 +98,4 @@ src_configure() {
 	use systemd && mycmakeargs+=( -DNO_UWSM=$(usex !uwsm) )
 
 	cmake_src_configure
-}
-
-src_compile() {
-	cmake_build release
 }
