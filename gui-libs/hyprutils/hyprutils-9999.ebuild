@@ -26,6 +26,10 @@ BDEPEND="
 	virtual/pkgconfig
 "
 
+PATCHES=(
+	"${FILESDIR}/${PN}-fix-missing-algorithm-include.patch"
+)
+
 pkg_setup() {
 	[[ ${MERGE_TYPE} == binary ]] && return
 

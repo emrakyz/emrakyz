@@ -1,0 +1,8 @@
+--- a/src/cli/ArgumentParser.cpp
++++ b/src/cli/ArgumentParser.cpp
+@@ -1,5 +1,6 @@
+ #include "ArgumentParser.hpp"
+ 
++#include <algorithm>
+ #include <format>
+ #include <vector>
