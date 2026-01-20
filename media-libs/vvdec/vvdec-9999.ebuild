@@ -22,20 +22,6 @@ HOMEPAGE="https://www.hhi.fraunhofer.de/en/departments/vca/technologies-and-solu
 
 LICENSE="BSD"
 
-src_unpack() {
-	if [[ -z ${PV%%*9999} ]]; then
-		git-r3_src_unpack
-	else
-		unpack ${P}.tar.gz
-	fi
-	use test || return
-	local _z _d="${S}/ext/bitstreams"
-	mkdir -p "${_d}"
-	for _z in ${A}; do
-		[[ -z ${_z%%*.zip} ]] && unzip -qo -d "${_d}/${_z%.zip}" "${DISTDIR}/${_z}"
-	done
-}
-
 src_prepare() {
 	cmake_src_prepare
 }
